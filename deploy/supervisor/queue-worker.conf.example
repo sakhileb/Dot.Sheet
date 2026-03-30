@@ -1,0 +1,13 @@
+[program:dotsheet-queue]
+process_name=%(program_name)s_%(process_num)02d
+command=/usr/bin/php /var/www/dotsheet/artisan queue:work redis --sleep=1 --tries=3 --timeout=90
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+user=www-data
+numprocs=2
+redirect_stderr=true
+stdout_logfile=/var/www/dotsheet/storage/logs/queue-worker.log
+stopwaitsecs=3600
+environment=APP_ENV="production",HOME="/var/www/dotsheet"
