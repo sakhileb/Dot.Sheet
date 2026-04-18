@@ -1,245 +1,263 @@
 # Dot.Sheet
 
-**Dot.Sheet** is an AI-powered collaborative spreadsheet platform built on Laravel. It combines a full-featured spreadsheet engine, real-time multi-user collaboration, and deep AI integration into a single web application.
+<p align="center">
+  <img src="dot_sheet.png" alt="Dot.Sheet Logo" width="220" />
+</p>
 
----
+<p align="center">
+  <strong>AI-powered collaborative spreadsheets built with Laravel, Livewire, and Tailwind.</strong>
+</p>
+
+Dot.Sheet combines a full spreadsheet engine, real-time collaboration, advanced AI assistance, and production-ready operational tooling in a single web platform.
 
 ## Table of Contents
 
-- [Features](#features)
+- [Overview](#overview)
+- [Complete Feature Inventory](#complete-feature-inventory)
 - [Tech Stack](#tech-stack)
 - [Requirements](#requirements)
-- [Installation](#installation)
+- [Quick Start](#quick-start)
 - [Configuration](#configuration)
-- [Running the Application](#running-the-application)
+- [Run the Application](#run-the-application)
 - [Testing](#testing)
-- [Deployment](#deployment)
-- [Project Structure](#project-structure)
-- [AI Integration](#ai-integration)
+- [Deployment & Operations](#deployment--operations)
+- [Architecture & Project Structure](#architecture--project-structure)
 - [Formula Engine](#formula-engine)
-- [Extending Formulas](#extending-formulas)
-- [Keyboard Shortcuts](#keyboard-shortcuts)
+- [AI System](#ai-system)
+- [Documentation Index](#documentation-index)
+- [Known Gaps / Backlog](#known-gaps--backlog)
 - [License](#license)
 
----
+## Overview
 
-## Features
+Dot.Sheet is a modern spreadsheet platform focused on:
 
-### Core Spreadsheet Engine
-- **Sparse grid storage** — only non-empty cells are persisted, enabling efficient 1,000-row × 100-column grids
-- **Virtual scrolling** — only the visible viewport is rendered for performance at scale
-- **40+ built-in formula functions** — SUM, AVERAGE, COUNT, MAX, MIN, IF, CONCAT, UPPER, LOWER, ROUND, ABS, SQRT, POWER, and more
-- **Formula dependency tracking** — automatic recalculation of dependent cells when a value changes; dependency graph cached in Redis
-- Cell references (`A1`, `$B$2`) and ranges (`A1:A10`)
-- Full operator precedence (`+`, `-`, `*`, `/`, `%`, `^`, comparison, logical)
-- Keyboard navigation (arrow keys, Tab, Shift+Tab, Enter, Escape)
+- Large-grid performance (sparse storage + virtual scrolling)
+- Multi-user collaboration with real-time updates and presence
+- AI-assisted analysis, formula generation, and workflow automation
+- Enterprise-ready operations (queues, monitoring, backups, load testing)
 
-### Rich Formatting & Data Tools
-- **Toolbar** — bold, italic, underline, strikethrough, font size, text/background color, number formats (currency, percentage, date, time)
-- **Format Painter** — copy formatting from one cell and apply it to another
-- **Conditional formatting** — highlight cells by rule (e.g., value > 100 → red background)
-- **Data validation** — number range, text length, allowed list values
-- **Sorting & filtering** — column-level sort, text/number/date/color/condition filters
-- Add, delete, hide, and resize rows and columns via right-click context menu or toolbar
+## Complete Feature Inventory
 
-### Charts & Visualizations
-- Powered by **Chart.js**
+This section enumerates all implemented product features from the project task roadmap.
+
+### 1. Foundation & Security
+
+- Laravel Jetstream (Livewire stack) with Teams
+- Laravel Fortify authentication (email/password + two-factor auth)
+- Laravel Sanctum API token support
+- Team and personal spreadsheet ownership model
+- Spreadsheet policy-based authorization for view/comment/edit/admin
+- Audit trail data model (`cell_history`, `ai_prompts`, sharing pivots)
+
+### 2. Core Spreadsheet Engine
+
+- Sparse grid persistence: only non-empty cells are stored
+- Dynamic 1,000 x 100 spreadsheet viewport with efficient rendering
+- Virtual scrolling and windowed row/column loading
+- Editable cells with click/double-click editing flow
+- Keyboard navigation: arrows, tab, shift+tab, enter, escape
+- Formula bar + selected cell metadata/sidebar support
+- Livewire-powered reactive updates and state synchronization
+
+### 3. Formula System
+
+- JavaScript parser/evaluator for responsive in-browser calculations
+- PHP server evaluator for authoritative validation and persistence
+- 40+ built-in functions across math, logic, text, date/time, and lookup
+- Relative and absolute references (`A1`, `$A$1`) and ranges (`A1:C10`)
+- Full expression parsing with operator precedence and nested functions
+- Dependency graph recalculation on update
+- Redis-backed caching for dependency/evaluation performance
+- Recalculation queue support for throttled update processing
+
+### 4. Rich Spreadsheet Tooling
+
+- Formatting toolbar:
+  - Bold, italic, underline, strikethrough
+  - Font size, text color, background color
+  - Number/date/time/currency/percentage formatting
+  - Cell alignment
+- Format Painter
+- Row/column operations: add, delete, resize, hide/show
+- Data validation rules (number range, text length, list options)
+- Conditional formatting rules (value and condition-based styling)
+- Sorting (ascending/descending)
+- Filtering (text, number, date, color, condition)
+
+### 5. Charts, Import, and Export
+
+- Chart.js integration with interactive chart builder
 - Supported chart types: bar, line, pie, scatter, area, doughnut
-- Select a data range, preview the chart, and save the configuration
+- Data range selection and chart preview before save
+- Persisted chart configuration storage
+- CSV import/export
+- Excel import/export via `maatwebsite/excel`
+- Background chunked import jobs with progress updates
 
-### Import & Export
-- Import **CSV** and **Excel** files (`maatwebsite/excel`)
-- Export to **CSV** and **Excel**
-- Large file imports are processed as background jobs with a live progress indicator
+### 6. Collaboration & Sharing
 
-### Real-time Collaboration
-- **Laravel Echo + Pusher** presence channels
-- Live display of active collaborators (avatars in the top bar)
-- Live cursor overlay showing each collaborator's active cell
-- Full broadcast of cell updates to all viewers of a spreadsheet
-
-### Version History
-- Auto-snapshot on edits and at configurable intervals
-- "Version History" modal to browse past versions
-- One-click restore to any previous version
-
-### Sharing & Permissions
-- **Team-based sharing** via Jetstream Teams
-- Invite external users by email with tokenized acceptance links
-- Granular permission levels: **View**, **Comment**, **Edit**, **Admin**
-- **Public view-only links** with optional expiration dates
-
-### Cell Comments
-- Threaded comment panels per cell
-- `@mention` team members to trigger email/database notifications
+- Real-time collaboration via Laravel Echo + Pusher-compatible channels
+- Presence channels with active collaborator indicators
+- Live remote cursor overlays and movement updates
+- Real-time cell update broadcast to connected users
+- Threaded cell comments
+- `@mentions` with notification delivery (database/email)
 - Resolve and re-open comment threads
+- Version history snapshots and restore flow
+- External email invitations with tokenized acceptance
+- Public view-only links with optional expiry
+- Permission levels: view, comment, edit, admin
 
-### Macros & Scripting
-- JavaScript script editor for automating repetitive tasks
-- Scripts run in a sandboxed Web Worker
-- Built-in macro recorder to capture and replay user actions
+### 7. AI Features
 
-### AI Features
-- **AI Formula Generation** — describe a formula in plain English; AI generates, previews, and inserts it
-- **AI Analysis Panel** — data insights, data cleaning suggestions, chart recommendations, sentiment analysis, OCR from pasted images
-- **Natural Language Queries** — type "What is the total sales for Q1?" and AI translates it into a formula or filter
-- **Automated Workflows** — AI-triggered actions based on conditions (e.g., "When stock < 10, send email")
-- Supports **OpenAI**, **Anthropic**, and **Ollama** (local LLM) as interchangeable providers
-- Per-user rate limiting (configurable RPM/RPH) with a Redis-backed cache layer
+- Provider-agnostic AI service layer (Ollama, OpenAI, Anthropic)
+- AI Formula modal:
+  - Natural language formula prompt
+  - Formula preview and insert confirmation
+- AI analysis panel with tabs for insights, cleaning, and chart guidance
+- Natural language query interface for spreadsheet actions
+- AI data cleaning suggestions
+- Sentiment analysis for text-heavy datasets
+- OCR workflows for extracting structured data from pasted images
+- Condition-driven automated workflows (AI-triggered actions)
+- Prompt/response logging in `ai_prompts`
+- User rate limiting (RPM/RPH) and API safety controls
 
-### Authentication & Teams
-- Email/password authentication via Laravel Fortify
-- Two-factor authentication (TOTP)
-- Team management, invitations, and role-based access via Laravel Jetstream
-- API token support via Laravel Sanctum
-- Profile photos, password management, browser session management
+### 8. Automation & Productivity
 
----
+- Keyboard shortcuts modal and command handling
+- Script editor for custom JavaScript automations
+- Sandboxed script execution (Web Worker model)
+- Macro recording and replay for repetitive tasks
+- Guided onboarding tour support (Shepherd.js)
+
+### 9. Platform Operations
+
+- Redis-backed queue and cache architecture
+- Horizon-ready queue monitoring setup
+- Backup command and helper scripts
+- Load testing script and runbook documentation
+- Deployment runbook with cache optimization and supervisor restart flow
 
 ## Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Backend framework | Laravel 13 |
-| Auth / Teams | Laravel Jetstream 5 + Fortify + Sanctum |
-| Frontend reactivity | Livewire 3 + Alpine.js |
+| Backend | Laravel 13 |
+| Auth/Identity | Jetstream 5, Fortify, Sanctum |
+| Frontend Reactivity | Livewire 3, Alpine.js |
 | Styling | Tailwind CSS 3 |
-| Build tool | Vite 8 |
-| Real-time | Laravel Echo + Pusher (PHP & JS SDKs) |
+| Build Tooling | Vite 8 |
+| Real-time | Laravel Echo, Pusher JS, Pusher PHP SDK |
+| AI Integrations | Ollama, OpenAI, Anthropic (via service abstraction) |
 | Charts | Chart.js 4 |
-| Import / Export | Maatwebsite Excel 3 |
-| Onboarding tour | Shepherd.js |
-| Queue management | Laravel Horizon |
-| Cache / Queues | Redis |
-| Database (dev) | SQLite |
-| Database (prod) | MySQL or PostgreSQL |
+| Import/Export | Maatwebsite Excel 3 + CSV |
+| Onboarding Tour | Shepherd.js |
+| Queue/Monitoring | Redis, Horizon-compatible deployment |
 | Testing | PHPUnit 12, Laravel Dusk 8 |
-
----
 
 ## Requirements
 
-- PHP **8.3+** with extensions: `pdo`, `pdo_mysql` / `pdo_pgsql` / `pdo_sqlite`, `redis`, `mbstring`, `xml`, `zip`
+- PHP 8.3+ with extensions: `pdo`, `mbstring`, `xml`, `zip`, and DB-specific PDO driver
 - Composer
-- Node.js **18+** and npm
-- Redis (required for queues, caching, and broadcasting)
-- A Pusher account **or** a self-hosted compatible server (e.g., Soketi) for real-time features
-- *(Optional)* An OpenAI, Anthropic, or Ollama endpoint for AI features
+- Node.js 18+ and npm
+- Redis (recommended for cache, sessions, queues, and broadcasting support)
+- Pusher account or self-hosted compatible websocket server (for real-time collaboration)
+- Optional AI credentials/endpoints for provider(s) you plan to use
 
----
-
-## Installation
+## Quick Start
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/your-org/dot-sheet.git
-cd dot-sheet
-
-# 2. Install PHP dependencies
-composer install
-
-# 3. Install JavaScript dependencies
-npm install
-
-# 4. Copy and configure the environment file
-cp .env.example .env
-php artisan key:generate
-
-# 5. Run database migrations
-php artisan migrate
-
-# 6. Build frontend assets
-npm run build
-```
-
-Alternatively, the `composer setup` script performs steps 2–6 in one command:
-
-```bash
+git clone https://github.com/sakhileb/Dot.Sheet.git
+cd Dot.Sheet
 composer run setup
+composer run dev
 ```
 
----
+Open: `http://localhost:8000`
+
+The `setup` script performs dependency install, environment bootstrap, key generation, migration, and frontend build.
 
 ## Configuration
 
-All configuration is done via the `.env` file. Key variables:
+Configure environment values in `.env`.
 
-### Application
+### App & Database
 
 ```env
 APP_NAME="Dot.Sheet"
 APP_URL=http://localhost:8000
-```
 
-### Database
-
-```env
-DB_CONNECTION=sqlite          # or mysql / pgsql
+DB_CONNECTION=sqlite
 DB_DATABASE=/absolute/path/to/database.sqlite
 ```
 
-### Redis
+### Redis / Queue / Session
 
 ```env
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
-CACHE_DRIVER=redis
+
+CACHE_STORE=redis
 QUEUE_CONNECTION=redis
 SESSION_DRIVER=redis
 ```
 
-### Broadcasting (Pusher)
+### Broadcasting
 
 ```env
-BROADCAST_DRIVER=pusher
+BROADCAST_CONNECTION=pusher
+
 PUSHER_APP_ID=your-app-id
 PUSHER_APP_KEY=your-app-key
 PUSHER_APP_SECRET=your-app-secret
 PUSHER_APP_CLUSTER=mt1
+
 VITE_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
 VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
 ```
 
-### AI Provider
+### AI Providers
 
 ```env
-# Supported: ollama | openai | anthropic
+# one of: ollama, openai, anthropic
 AI_PROVIDER=ollama
 
-# Ollama (local)
+# ollama
 OLLAMA_BASE_URL=http://localhost:11434
 OLLAMA_MODEL=mistral
 
-# OpenAI
+# openai
 OPENAI_API_KEY=sk-...
-OPENAI_MODEL=gpt-3.5-turbo
+OPENAI_MODEL=gpt-4o-mini
 
-# Anthropic
+# anthropic
 ANTHROPIC_API_KEY=sk-ant-...
-ANTHROPIC_MODEL=claude-3-sonnet-20240229
+ANTHROPIC_MODEL=claude-3-5-sonnet-latest
 
-# Rate limiting
+# safety/rate limits
 AI_RATE_LIMIT_ENABLED=true
 AI_RATE_LIMIT_RPM=60
+AI_RATE_LIMIT_RPH=1000
 ```
 
----
+## Run the Application
 
-## Running the Application
-
-The `composer dev` script starts all required processes concurrently:
+Preferred one-command development mode:
 
 ```bash
 composer run dev
 ```
 
 This starts:
-- `php artisan serve` — application server at `http://localhost:8000`
-- `php artisan queue:listen` — background job processor
-- `php artisan pail` — real-time log viewer
-- `npm run dev` — Vite HMR dev server
 
-Or start services individually:
+- App server (`php artisan serve`)
+- Queue listener (`php artisan queue:listen --tries=1 --timeout=0`)
+- Log tail (`php artisan pail --timeout=0`)
+- Vite dev server (`npm run dev`)
+
+Manual alternative:
 
 ```bash
 php artisan serve
@@ -247,39 +265,36 @@ php artisan queue:work --queue=default,imports
 npm run dev
 ```
 
----
-
 ## Testing
 
 ```bash
-# All tests
+# all app tests
 composer run test
 
-# PHPUnit only
+# phpunit/feature/unit tests
 php artisan test
 
-# Specific test suite
+# targeted suite
 php artisan test --filter=FormulaEvaluator
 
-# Browser tests (requires Dusk)
+# browser/E2E tests (requires Dusk setup)
 php artisan dusk
 ```
 
-Key test locations:
+Additional quality checks:
 
-| Path | Coverage |
-|---|---|
-| `tests/Unit/FormulaEvaluatorServiceTest.php` | Formula functions, cell refs, dependency graph |
-| `tests/Feature/SpreadsheetCoreOperationsTest.php` | Create / update / delete cells, sharing |
-| `tests/Browser/` | Critical user journeys via Laravel Dusk |
+- Load testing helper: `scripts/run-load-test.sh`
+- Load testing documentation: `docs/load-testing.md`
 
-Load testing scripts are available in `scripts/run-load-test.sh` and documented in [docs/load-testing.md](docs/load-testing.md).
+## Deployment & Operations
 
----
+Primary deployment references:
 
-## Deployment
+- `docs/deployment-runbook.md`
+- `docs/redis-horizon-checklist.md`
+- `deploy/supervisor/`
 
-See the full [Deployment Runbook](docs/deployment-runbook.md). Summary:
+Typical deployment flow:
 
 ```bash
 git pull origin main
@@ -294,152 +309,105 @@ sudo supervisorctl restart dotsheet-horizon:*
 sudo supervisorctl restart dotsheet-queue:*
 ```
 
-Supervisor configuration examples for Horizon and queue workers are in `deploy/supervisor/`.
-
-**Backups** — run manually or via cron:
+Backups:
 
 ```bash
 php artisan ops:backup
-# or
 ./scripts/run-backup.sh
 ```
 
-Backups are stored in `storage/app/backups/<timestamp>/`. Configure retention with `BACKUP_RETENTION_DAYS` in `.env`.
+## Architecture & Project Structure
 
----
-
-## Project Structure
-
-```
+```text
 app/
-  Http/Controllers/        # SpreadsheetController and other HTTP controllers
-  Livewire/                # Livewire components
-    ShowSpreadsheet.php      # Main grid engine
-    AiAnalysisPanel.php      # AI sidebar (Insights / Cleaning / Charts)
-    AiFormulaModal.php       # AI formula generation modal
-    AiNaturalLanguageQuery.php
-    CellCommentsPanel.php
-    ChartBuilder.php
-    ScriptsEditor.php
-    SpreadsheetSharingPanel.php
+  Http/Controllers/
+  Livewire/
+    ShowSpreadsheet.php
     SpreadsheetToolbar.php
+    ChartBuilder.php
+    CellCommentsPanel.php
     VersionHistoryModal.php
-  Models/                  # Eloquent models (Spreadsheet, Cell, CellHistory, …)
+    SpreadsheetSharingPanel.php
+    AiFormulaModal.php
+    AiAnalysisPanel.php
+    AiNaturalLanguageQuery.php
+    ScriptsEditor.php
   Services/
-    AiService.php            # Unified AI provider client (OpenAI / Anthropic / Ollama)
-    FormulaEvaluatorService.php  # PHP-side formula engine
+    FormulaEvaluatorService.php
     SpreadsheetImportExportService.php
-  Events/                  # Broadcasting events (CellUpdated, CursorMoved)
-  Jobs/                    # Queue jobs (BulkPasteChunkJob, ImportRowsChunkJob, …)
-  Notifications/           # Database / email notifications (@mentions, invitations)
+    AiService.php
+  Jobs/
+    BulkPasteChunkJob.php
+    ImportRowsChunkJob.php
+    SimulateSpreadsheetEditJob.php
+  Events/
+    SpreadsheetCellUpdated.php
+    SpreadsheetCursorMoved.php
+  Models/
+    Spreadsheet.php
+    Cell.php
+    CellHistory.php
+    ChartConfig.php
+    AiPrompt.php
 resources/
   js/
-    formula-parser.js        # Client-side formula parser (40+ functions)
+    formula-parser.js
   views/
-    livewire/                # Blade templates for Livewire components
-    spreadsheets/            # Spreadsheet list and create views
+    livewire/
 database/
-  migrations/              # All schema migrations
+  migrations/
 docs/
-  user-guide.md
-  developer-formula-extension.md
-  deployment-runbook.md
-  load-testing.md
-  redis-horizon-checklist.md
 ```
-
----
-
-## AI Integration
-
-Dot.Sheet routes AI requests through a single `AiService` class that supports three interchangeable providers:
-
-| Provider | Use Case |
-|---|---|
-| **Ollama** | Self-hosted / air-gapped environments |
-| **OpenAI** | Cloud-hosted with GPT models |
-| **Anthropic** | Cloud-hosted with Claude models |
-
-Set `AI_PROVIDER` in `.env` to switch providers with no code changes.
-
-AI interactions are logged to the `ai_prompts` table for audit, debugging, and result re-use. Per-user rate limiting is enforced via a Redis counter before any external API call is made.
-
----
 
 ## Formula Engine
 
-The formula engine has two layers:
+Dot.Sheet evaluates formulas in two layers for speed and consistency:
 
-- **Client-side** (`resources/js/formula-parser.js`) — parses and evaluates formulas instantly in the browser for a responsive feel
-- **Server-side** (`app/Services/FormulaEvaluatorService.php`) — validates and re-evaluates on save, builds the dependency graph, and caches results in Redis
+- Client: `resources/js/formula-parser.js`
+- Server: `app/Services/FormulaEvaluatorService.php`
 
-Supported categories of functions:
+Supported function families include:
 
-| Category | Functions |
-|---|---|
-| Math | `SUM`, `AVERAGE`, `COUNT`, `MAX`, `MIN`, `ROUND`, `ABS`, `SQRT`, `POWER`, `MOD` |
-| Logic | `IF`, `AND`, `OR`, `NOT`, `IFERROR` |
-| Text | `CONCAT`, `UPPER`, `LOWER`, `LEN`, `TRIM`, `LEFT`, `RIGHT`, `MID` |
-| Date/Time | `NOW`, `TODAY`, `DATE`, `YEAR`, `MONTH`, `DAY` |
-| Lookup | `VLOOKUP`, `HLOOKUP`, `INDEX`, `MATCH` |
+- Math: `SUM`, `AVERAGE`, `COUNT`, `MAX`, `MIN`, `ROUND`, `ABS`, `SQRT`, `POWER`, `MOD`
+- Logic: `IF`, `AND`, `OR`, `NOT`, `IFERROR`
+- Text: `CONCAT`, `UPPER`, `LOWER`, `LEN`, `TRIM`, `LEFT`, `RIGHT`, `MID`
+- Date/Time: `NOW`, `TODAY`, `DATE`, `YEAR`, `MONTH`, `DAY`
+- Lookup: `VLOOKUP`, `HLOOKUP`, `INDEX`, `MATCH`
 
-Cell references support both relative (`A1`) and absolute (`$A$1`) notation. Range references (`A1:C10`) are expanded with a safety limit of 5,000 cells.
+To extend formulas, follow: `docs/developer-formula-extension.md`
 
----
+## AI System
 
-## Extending Formulas
+All AI operations are centralized through `app/Services/AiService.php` with provider switching through configuration only.
 
-To add a new function to the PHP evaluator:
+Provider options:
 
-1. Open `app/Services/FormulaEvaluatorService.php` and locate `evaluateExpression()`.
-2. Add a case to the `match ($funcName)` block, evaluating arguments recursively.
-3. Add a helper method for the implementation.
+- Ollama (self-hosted/local)
+- OpenAI (cloud)
+- Anthropic (cloud)
 
-Example — adding `MEDIAN`:
+AI requests are logged to `ai_prompts` for transparency, auditing, and potential response reuse. Per-user rate limits are enforced before outbound provider calls.
 
-```php
-'MEDIAN' => $this->median(array_map(fn($a) => $this->evaluateExpression($a), $args)),
-```
+## Documentation Index
 
-```php
-protected function median(array $values): float
-{
-    sort($values);
-    $count = count($values);
-    if ($count === 0) return 0.0;
-    $mid = intdiv($count, 2);
-    return $count % 2 === 1
-        ? (float) $values[$mid]
-        : ((float) $values[$mid - 1] + (float) $values[$mid]) / 2;
-}
-```
+- User guide: `docs/user-guide.md`
+- Formula extension guide: `docs/developer-formula-extension.md`
+- Deployment runbook: `docs/deployment-runbook.md`
+- Load testing: `docs/load-testing.md`
+- Redis/Horizon checklist: `docs/redis-horizon-checklist.md`
+- Quick project bootstrap: `QUICKSTART.md`
+- Historical delivery notes: `PHASE_1_COMPLETION.md`, `PHASE_2_COMPLETE.md`, `PHASE_2_PROGRESS.md`, `TASK_LIST.md`
 
-Mirror the same function name in `resources/js/formula-parser.js` for client-side parity.
+## Known Gaps / Backlog
 
-See the full guide in [docs/developer-formula-extension.md](docs/developer-formula-extension.md).
+The major roadmap is implemented. Remaining/planned items include:
 
----
-
-## Keyboard Shortcuts
-
-| Shortcut | Action |
-|---|---|
-| Arrow keys | Move selection |
-| Enter | Commit edit / move down |
-| Escape | Cancel edit |
-| Tab / Shift+Tab | Move right / left |
-| Double-click | Enter edit mode |
-| Ctrl/Cmd + S | Save cell |
-| Ctrl/Cmd + C | Copy cell value |
-| Ctrl/Cmd + V | Paste |
-| Ctrl/Cmd + Z | Undo |
-| Ctrl/Cmd + Y | Redo |
-| Ctrl/Cmd + F | Focus formula bar |
-
-A full shortcuts reference is available inside the app via the "Keyboard Shortcuts" help modal.
-
----
+- CRDT/OT-style conflict resolution enhancements for concurrent edits
+- Mobile-optimized simplified editor experience
+- Public API surface (REST/GraphQL)
+- Third-party workflow integrations (Zapier/Make)
+- Offline-first sync support
 
 ## License
 
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Licensed under the [MIT License](LICENSE).
