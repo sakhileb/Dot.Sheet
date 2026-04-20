@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Dot.Sheet') }}</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/dot_sheet.png">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=sora:400,500,600,700|fraunces:600,700,800" rel="stylesheet" />
     <style>
