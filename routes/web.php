@@ -1,13 +1,19 @@
 <?php
 
+use App\Http\Controllers\Auth\EcosystemAuthController;
+
 use App\Http\Controllers\SpreadsheetController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/auth/ecosystem', [EcosystemAuthController::class, 'handle'])->name('auth.ecosystem');
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+
 Route::get('shared/s/{token}', [SpreadsheetController::class, 'publicShow'])->name('spreadsheets.public');
+
 
 Route::middleware([
     'auth:sanctum',
