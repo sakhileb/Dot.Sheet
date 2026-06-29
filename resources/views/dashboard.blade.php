@@ -1,5 +1,14 @@
 <x-app-layout>
     <style>
+        /* Dot OS token overrides for Dot.Sheet */
+        :root {
+            --ink: #f4f4f5;
+            --ink-soft: #71717a;
+            --line: rgba(255,255,255,0.07);
+            --sheet-card: #141416;
+            --accent-strong: #06b6d4;
+        }
+
         /* ── Dashboard Layout ── */
         .dash-page {
             width: min(1100px, calc(100% - 2.5rem));
@@ -21,40 +30,40 @@
             font-size: 0.76rem;
             letter-spacing: 0.07em;
             text-transform: uppercase;
-            color: var(--ink-soft);
+            color: #52525b;
             margin-bottom: 0.3rem;
         }
 
         .dash-heading {
             margin: 0;
-            font-family: 'Fraunces', serif;
-            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
             font-weight: 700;
-            line-height: 1.1;
+            line-height: 1.2;
             letter-spacing: -0.01em;
-            color: var(--ink);
+            color: #f4f4f5;
         }
 
         .dash-btn-new {
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
-            padding: 0.72rem 1.25rem;
-            background: var(--ink);
-            color: #f5fbf8;
-            border-radius: 12px;
-            font-family: 'Sora', system-ui, sans-serif;
-            font-size: 0.88rem;
+            padding: 0.6rem 1.15rem;
+            background: #06b6d4;
+            color: #09090b;
+            border-radius: 8px;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 0.825rem;
             font-weight: 600;
             text-decoration: none;
-            box-shadow: 0 8px 20px rgba(18, 34, 38, 0.2);
+            transition: filter .14s;
             transition: transform 180ms ease, box-shadow 180ms ease;
             white-space: nowrap;
         }
 
         .dash-btn-new:hover {
             transform: translateY(-2px);
-            box-shadow: 0 14px 28px rgba(18, 34, 38, 0.28);
+            filter:brightness(1.15);
         }
 
         /* ── Stats bar ── */
@@ -66,7 +75,7 @@
         }
 
         .dash-stat {
-            background: rgba(255, 255, 255, 0.72);
+            background:#141416;
             border: 1px solid var(--line);
             border-radius: 14px;
             padding: 0.75rem 1.15rem;
@@ -76,21 +85,21 @@
         }
 
         .dash-stat-value {
-            font-family: 'Fraunces', serif;
+            font-family:'Syne',sans-serif;
             font-size: 1.3rem;
             line-height: 1;
-            color: var(--ink);
+            color:#f4f4f5;
         }
 
         .dash-stat-label {
             font-size: 0.78rem;
-            color: var(--ink-soft);
+            color:#71717a;
             line-height: 1.35;
         }
 
         /* ── Spreadsheet list ── */
         .dash-list {
-            background: rgba(255, 255, 255, 0.78);
+            background:#141416;
             border: 1px solid rgba(255, 255, 255, 0.65);
             box-shadow: 0 8px 40px rgba(13, 38, 46, 0.12);
             border-radius: 22px;
@@ -103,13 +112,13 @@
             grid-template-columns: 1fr 160px 120px 80px 100px;
             gap: 0.5rem;
             padding: 0.75rem 1.4rem;
-            background: rgba(18, 34, 38, 0.04);
+            background:rgba(255,255,255,0.04);
             border-bottom: 1px solid var(--line);
             font-size: 0.75rem;
             font-weight: 600;
             letter-spacing: 0.05em;
             text-transform: uppercase;
-            color: var(--ink-soft);
+            color:#71717a;
         }
 
         .dash-row {
@@ -127,7 +136,7 @@
         .dash-row:last-child { border-bottom: none; }
 
         .dash-row:hover {
-            background: rgba(31, 157, 116, 0.05);
+            background:rgba(6,182,212,0.06);
         }
 
         /* Name cell */
@@ -142,7 +151,7 @@
             width: 36px;
             height: 36px;
             border-radius: 10px;
-            background: linear-gradient(145deg, rgba(31,157,116,0.15) 0%, rgba(31,157,116,0.06) 100%);
+            background:linear-gradient(145deg,rgba(6,182,212,0.12) 0%,rgba(6,182,212,0.04) 100%);
             border: 1px solid rgba(31, 157, 116, 0.2);
             display: flex;
             align-items: center;
@@ -155,7 +164,7 @@
         .dash-row-title {
             font-size: 0.92rem;
             font-weight: 600;
-            color: var(--ink);
+            color:#f4f4f5;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -164,7 +173,7 @@
         /* Team cell */
         .dash-row-team {
             font-size: 0.82rem;
-            color: var(--ink-soft);
+            color:#71717a;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -174,7 +183,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.3rem;
-            background: rgba(31, 157, 116, 0.1);
+            background:rgba(6,182,212,0.1);
             color: var(--accent-strong);
             border: 1px solid rgba(31, 157, 116, 0.22);
             border-radius: 999px;
@@ -199,14 +208,14 @@
         /* Cells count */
         .dash-row-cells {
             font-size: 0.84rem;
-            color: var(--ink-soft);
+            color:#71717a;
             text-align: center;
         }
 
         /* Date */
         .dash-row-date {
             font-size: 0.8rem;
-            color: var(--ink-soft);
+            color:#71717a;
         }
 
         /* Actions */
@@ -225,8 +234,8 @@
             height: 30px;
             border-radius: 8px;
             border: 1px solid var(--line);
-            background: rgba(255, 255, 255, 0.7);
-            color: var(--ink-soft);
+            background:#141416;
+            color:#71717a;
             text-decoration: none;
             cursor: pointer;
             transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
@@ -234,7 +243,7 @@
 
         .dash-action-btn:hover {
             background: rgba(255, 255, 255, 0.95);
-            color: var(--ink);
+            color:#f4f4f5;
             border-color: rgba(18, 34, 38, 0.22);
         }
 
@@ -246,7 +255,7 @@
 
         /* ── Empty state ── */
         .dash-empty {
-            background: rgba(255, 255, 255, 0.78);
+            background:#141416;
             border: 1px solid rgba(255, 255, 255, 0.65);
             box-shadow: 0 8px 40px rgba(13, 38, 46, 0.12);
             border-radius: 22px;
@@ -271,14 +280,14 @@
 
         .dash-empty h2 {
             margin: 0 0 0.6rem;
-            font-family: 'Fraunces', serif;
+            font-family:'Syne',sans-serif;
             font-size: 1.5rem;
-            color: var(--ink);
+            color:#f4f4f5;
         }
 
         .dash-empty p {
             margin: 0 0 2rem;
-            color: var(--ink-soft);
+            color:#71717a;
             font-size: 0.93rem;
             max-width: 36ch;
             margin-left: auto;
